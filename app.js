@@ -13,7 +13,6 @@ mongoose
   .connect(dbURI)
   .then(() => app.listen(port))
   .catch((err) => err);
-// mongoose.connect(dbURI);
 
 const itemSchema = new mongoose.Schema({
   item: String,
@@ -21,6 +20,8 @@ const itemSchema = new mongoose.Schema({
   price: Number,
 });
 const Item = mongoose.model("Item", itemSchema);
+
+app.use(express.json())
 
 //rendering items that are in the database
 app.get("/items", async (req, resp) => {
@@ -31,6 +32,7 @@ app.get("/items", async (req, resp) => {
     resp.status(500).json({ message: "Error fetching items", error });
   }
 });
+
 // creating new items and displaying them
 app.get("/new-items", async (req, resp) => {
   try {
@@ -70,6 +72,18 @@ app.get("/items/:id", async (req, resp) => {
     resp.status(500).json({ message: "error occurred on server" }, err);
   }
 });
+
+
+// posting data
+app.post('/items-post',async(req,resp)=>{
+  try{
+    const items=new Item(req.body)
+ const savedItems=await items.save()
+ resp.status(201).json(savedItems)
+  }catch(err){
+console.log(err)
+  }
+})
 app.use((req, resp) => {
   console.log(resp.status(404));
 });
