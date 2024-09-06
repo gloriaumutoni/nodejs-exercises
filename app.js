@@ -99,6 +99,18 @@ app.put('/updated-item/:id',async(req,resp)=>{
   }
 })
 
+//deleting data
+app.delete('/deleted-item/:id',async(req,resp)=>{
+  try{
+const id=req.params.id
+const deleted= await Item.findByIdAndDelete(id)
+if(!deleted) return resp.status(404).json({message:"couldn't delete"})
+  resp.status(200).json(deleted).json({message:'item successfully deleted'})
+}catch(err){
+console.log(err)
+  }
+})
+
 //catching error
 app.use((req, resp) => {
   console.log(resp.status(404));
