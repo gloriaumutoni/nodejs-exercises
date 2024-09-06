@@ -84,6 +84,22 @@ app.post('/items-post',async(req,resp)=>{
 console.log(err)
   }
 })
+
+//updating existing item in database
+app.put('/updated-item/:id',async(req,resp)=>{
+  try{
+    const parm=req.params.id
+    const updatedItem=await Item.findByIdAndUpdate(parm,req.body)
+    if(!updatedItem){
+     return resp.status(404).json({message:'data not update'})
+    }
+    resp.status(200).json(updatedItem)
+  }catch(err){
+    resp.status(500).json({message:'failed to load server'},err)
+  }
+})
+
+//catching error
 app.use((req, resp) => {
   console.log(resp.status(404));
 });
